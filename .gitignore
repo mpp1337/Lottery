@@ -1,0 +1,17 @@
+node_modules
+
+.env
+
+hardhat.config.js
+helper-hardhat-config.js
+test
+utils
+scripts
+front_end
+deployments
+deploy
+coverage
+cache
+artifacts
+coverage.json
+gas-report.txt
