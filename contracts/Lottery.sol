@@ -5,6 +5,7 @@ import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 error Lottery__NotEnoughToEnter();
 error Lottery__PrizeSendError();
@@ -207,11 +208,16 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatible, Ownable {
     /* ADMIN FUNCTIONS */
 
     function setAdminFee(uint256 newFee) external onlyOwner {
-        if(newFee > 25 && (s_lotteryState != LotteryState.OPEN)) {
+        if(newFee > 25 && (s_lotteryState == LotteryState.OPEN)) {
             revert Lottery__IncorrectNewFee();
         }
 
         s_adminFee = newFee;
+    }
+
+    // withdraw tokens sent to this contract (tokens are not part of this game)
+    function withdrawDonatedERC20(address tokenAddress, uint256 amount) external onlyOwner {
+        IERC20(tokenAddress).transfer(msg.sender, amount);
     }
 
     /* VIEW / PURE FUNCTIONS */
