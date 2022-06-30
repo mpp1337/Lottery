@@ -211,13 +211,17 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatible, Ownable {
         if(newFee > 25 && (s_lotteryState == LotteryState.OPEN)) {
             revert Lottery__IncorrectNewFee();
         }
-
         s_adminFee = newFee;
     }
 
     // withdraw tokens sent to this contract (tokens are not part of this game)
     function withdrawDonatedERC20(address tokenAddress, uint256 amount) external onlyOwner {
         IERC20(tokenAddress).transfer(msg.sender, amount);
+    }
+
+    // owner can change entrance fee based on current rate
+    function changeEntranceFee(uint256 newEntranceFee) external onlyOwner {
+        s_entranceFee = newEntranceFee;
     }
 
     /* VIEW / PURE FUNCTIONS */
